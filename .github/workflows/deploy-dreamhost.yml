@@ -17,9 +17,9 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "${{ secrets.DH_DEV_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.DH_PROD_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.DH_DEV_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H "${{ secrets.DH_PROD_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Deploy to DreamHost
         run: |
@@ -34,22 +34,22 @@ jobs:
             --exclude='*.log' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o IdentitiesOnly=yes" \
             public/ \
-            ${{ secrets.DH_PROD_USER }}@${{ secrets.DH_DEV_HOST }}:${{ secrets.DH_PROD_REMOTE_PATH }}
+            ${{ secrets.DH_PROD_USER }}@${{ secrets.DH_PROD_HOST }}:${{ secrets.DH_PROD_REMOTE_PATH }}
 
       - name: Generate config.php
         env:
           SSH_USER: ${{ secrets.DH_PROD_USER }}
-          SSH_HOST: ${{ secrets.DH_DEV_HOST }}
+          SSH_HOST: ${{ secrets.DH_PROD_HOST }}
           REMOTE_PATH: ${{ secrets.DH_PROD_REMOTE_PATH }}
         run: |
           cat > /tmp/config.php << EOF
           <?php if( ! defined('ROOT_PATH') ) die( 'Curiosity kills cat!' );
 
           //Define DB variables.
-          define( 'DB_HOST', '${{ secrets.DH_DEV_DB_HOST }}' );
-          define( 'DB_NAME', '${{ secrets.DH_DEV_DB_NAME }}' );
-          define( 'DB_USERNAME', '${{ secrets.DH_DEV_DB_USERNAME }}' );
-          define( 'DB_PASSWORD', '${{ secrets.DH_DEV_DB_PASSWORD }}' );
+          define( 'DB_HOST', '${{ secrets.DH_PROD_DB_HOST }}' );
+          define( 'DB_NAME', '${{ secrets.DH_PROD_DB_NAME }}' );
+          define( 'DB_USERNAME', '${{ secrets.DH_PROD_DB_USERNAME }}' );
+          define( 'DB_PASSWORD', '${{ secrets.DH_PROD_DB_PASSWORD }}' );
 
           EOF
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o IdentitiesOnly=yes /tmp/config.php ${SSH_USER}@${SSH_HOST}:${REMOTE_PATH}config.php

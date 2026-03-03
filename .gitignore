@@ -1,0 +1,20 @@
+# Database configuration with sensitive credentials
+config.php
+public/config.php
+
+# Cache directory
+public/cache/
+
+# Uploads directory
+uploads/
+
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# DreamHost diagnostic files
+.dh-diag/
+
+# Vite cache
+.vite/
+**/.vite/

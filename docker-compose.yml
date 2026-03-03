@@ -1,0 +1,55 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "9090:80"
+    volumes:
+      - ./public:/var/www/html
+    container_name: x-369usa-com
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_NAME=x-369usa-com
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-x-369usa-com
+    ports:
+      - "3407:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=x-369usa-com
+      - MYSQL_USER=x-369usa-com-user
+      - MYSQL_PASSWORD=x-369usa-com-password
+    volumes:
+      - x_369usa_com_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-x-369usa-com
+    ports:
+      - "9091:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=rootpassword
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+volumes:
+  x_369usa_com_data:

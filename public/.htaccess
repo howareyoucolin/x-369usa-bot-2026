@@ -2,3 +2,12 @@
 <IfModule mod_headers.c>
     Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+
+# Block web access to CLI (only run via: php cli <command>)
+<Files "cli">
+    Require all denied
+</Files>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^commands/ - [F,L]
+</IfModule>

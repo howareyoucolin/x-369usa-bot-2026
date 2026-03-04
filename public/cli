@@ -1,35 +1,13 @@
 #!/usr/bin/env php
 <?php
 /**
- * CLI entry point. Run only from the command line:
+ * CLI entry point. Run from the public directory:
  *   php cli <command>
+ *   php cli migrate
  *   php cli help
- *   php cli hello
  */
-
 if (php_sapi_name() !== 'cli') {
     fwrite(STDERR, "This script can only be run from the command line.\n");
     exit(1);
 }
-
-$command = $argv[1] ?? 'help';
-$commands = [
-    'hello' => function () {
-        echo "Hello from the CLI!\n";
-    },
-    'help' => function () use ($argv) {
-        $script = basename($argv[0]);
-        echo "Usage: php {$script} <command>\n\n";
-        echo "Commands:\n";
-        echo "  hello    Say hello\n";
-        echo "  help     Show this help\n";
-    },
-];
-
-if (!isset($commands[$command])) {
-    fwrite(STDERR, "Unknown command: {$command}\n");
-    fwrite(STDERR, "Run: php " . basename($argv[0]) . " help\n");
-    exit(1);
-}
-
-$commands[$command]();
+require __DIR__ . DIRECTORY_SEPARATOR . 'commands' . DIRECTORY_SEPARATOR . 'cli.php';

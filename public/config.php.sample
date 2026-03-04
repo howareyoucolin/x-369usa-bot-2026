@@ -1,0 +1,21 @@
+<?php
+/**
+ * Configuration file
+ * Copy this to config.php and update with your settings
+ */
+
+// Debug mode
+define( 'DEBUG', true );
+
+// Error reporting (only enable in development!)
+define( 'ERROR_REPORTING', true );
+
+// Database settings
+define( 'DB_HOST', 'your-database-host' );
+define( 'DB_NAME', 'your-database-name' );
+define( 'DB_USERNAME', 'your-database-username' );
+define( 'DB_PASSWORD', 'your-database-password' );
+
+// Telegram notifications (optional)
+define( 'TELEGRAM_BOT_TOKEN', 'your-telegram-bot-token' );
+define( 'TELEGRAM_CHAT_ID', 'your-telegram-chat-id' );
